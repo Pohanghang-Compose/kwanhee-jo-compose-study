@@ -105,10 +105,12 @@ fun SignUpPage(
                 .padding(horizontal = 20.dp)
                 .fillMaxWidth(),
             onClick = {
-                if (!(id.length in 6..10)) onStateChange(SignUpState.ErrorId)
-                else if (!(password.length in 8..10)) onStateChange(SignUpState.ErrorPassword)
-                else if ((nickname.length <= 0)) onStateChange(SignUpState.ErrorNickname)
-                else onStateChange(SignUpState.Success(id, password, nickname))
+                when {
+                    !(id.length in 6..10) -> onStateChange(SignUpState.ErrorId)
+                    !(password.length in 8..10) -> onStateChange(SignUpState.ErrorPassword)
+                    (nickname.isEmpty()) -> onStateChange(SignUpState.ErrorNickname)
+                    else -> onStateChange(SignUpState.Success(id, password, nickname))
+                }
             }
         )
     }
