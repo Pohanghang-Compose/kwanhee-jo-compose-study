@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">kwanhee-jo-compose-study</string>
+    <string name="with_me">with 관희</string>
+    <string name="login">로그인</string>
+    <string name="sign_up">회원가입</string>
+
+    <string name="id">아이디</string>
+    <string name="id_upper">ID</string>
+    <string name="id_input">Enter your id</string>
+
+    <string name="password">패스워드</string>
+    <string name="password_upper">PASSWORD</string>
+    <string name="password_input">Enter your password</string>
+
+    <string name="nickname">닉네임</string>
+    <string name="nickname_upper">NICKNAME</string>
+    <string name="nickname_input">Enter your nickname</string>
+</resources>
