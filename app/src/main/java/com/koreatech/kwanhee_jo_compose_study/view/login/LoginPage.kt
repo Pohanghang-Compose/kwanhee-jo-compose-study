@@ -31,7 +31,7 @@ import com.koreatech.kwanhee_jo_compose_study.fusions.EditTextWithTitle
 fun LoginPage(
     modifier: Modifier = Modifier,
     onClickLogin: (id: String, password: String) -> Unit,
-    onClickSignUpPage: () -> Unit
+    onClickSignUpPage: () -> Unit,
 ) {
     var id by remember {
         mutableStateOf("")
@@ -60,7 +60,9 @@ fun LoginPage(
             placeholderText = stringResource(id = R.string.id_input),
             leadingIcon = Icons.Default.AccountBox,
             text = id,
-            onTextChanged = { id = it },
+            onTextChanged = { changedId ->
+                id = changedId
+            },
             modifier = Modifier
                 .padding(horizontal = 20.dp)
                 .fillMaxWidth()
