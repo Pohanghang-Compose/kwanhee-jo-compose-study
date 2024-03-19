@@ -1,5 +1,6 @@
 package com.koreatech.kwanhee_jo_compose_study.view.login
 
+import android.content.Context
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -23,13 +24,17 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.koreatech.kwanhee_jo_compose_study.R
+import com.koreatech.kwanhee_jo_compose_study.common.UiStatus
 import com.koreatech.kwanhee_jo_compose_study.components.ButtonWithCornerShape
 import com.koreatech.kwanhee_jo_compose_study.components.Title
 import com.koreatech.kwanhee_jo_compose_study.fusions.EditTextWithTitle
+import com.koreatech.kwanhee_jo_compose_study.utils.toast
 
 @Composable
 fun LoginPage(
     modifier: Modifier = Modifier,
+    state: LoginState,
+    context: Context,
     onClickLogin: (id: String, password: String) -> Unit,
     onClickSignUpPage: () -> Unit,
 ) {
@@ -102,6 +107,15 @@ fun LoginPage(
                 .fillMaxWidth(),
             onClick = onClickSignUpPage
         )
+    }
+    when (state.status) {
+        UiStatus.Loading -> Unit
+        UiStatus.Success -> Unit
+        is UiStatus.Failed ->{
+            toast(context, state.status.message)
+        }
+
+        else -> {}
     }
 }
 

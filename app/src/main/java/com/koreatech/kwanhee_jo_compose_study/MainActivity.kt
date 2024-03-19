@@ -1,132 +1,198 @@
 package com.koreatech.kwanhee_jo_compose_study
 
-import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Scaffold
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
-import androidx.navigation.NavGraphBuilder
-import androidx.navigation.NavType
+import androidx.core.os.bundleOf
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navArgument
 import com.koreatech.kwanhee_jo_compose_study.Constants.ID
 import com.koreatech.kwanhee_jo_compose_study.Constants.NICKNAME
 import com.koreatech.kwanhee_jo_compose_study.Constants.PASSWORD
 import com.koreatech.kwanhee_jo_compose_study.ui.theme.KwanheeTheme
 import com.koreatech.kwanhee_jo_compose_study.view.home.HomePage
+import com.koreatech.kwanhee_jo_compose_study.view.home.HomeViewModel
 import com.koreatech.kwanhee_jo_compose_study.view.login.LoginPage
+import com.koreatech.kwanhee_jo_compose_study.view.login.LoginSideEffect
+import com.koreatech.kwanhee_jo_compose_study.view.login.LoginViewModel
+import com.koreatech.kwanhee_jo_compose_study.view.navi.BottomNavigationBar
+import com.koreatech.kwanhee_jo_compose_study.view.navi.serach.SearchPage
+import com.koreatech.kwanhee_jo_compose_study.view.navi.setting.SettingPage
 import com.koreatech.kwanhee_jo_compose_study.view.signup.SignUpPage
+import com.koreatech.kwanhee_jo_compose_study.view.signup.SignUpSideEffect
 import com.koreatech.kwanhee_jo_compose_study.view.signup.SignUpState
+import com.koreatech.kwanhee_jo_compose_study.view.signup.SignUpViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
+import org.orbitmvi.orbit.compose.collectAsState
+import org.orbitmvi.orbit.compose.collectSideEffect
 
 class MainActivity : ComponentActivity() {
+    @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             KwanheeTheme {
-                Box(modifier = Modifier.fillMaxSize()) {
-                    val navController = rememberNavController()
-                    val context = LocalContext.current
-                    NavHost(navController = navController, startDestination = Screen.Login.route) {
-                        addLoginPage(navController = navController, context)
-                        addSignUpPage(navController = navController)
-                        addHomePage(navController = navController)
-                    }
-                }
-            }
-        }
-    }
-}
+                val navController = rememberNavController()
+                val context = LocalContext.current
+                val currentRoute by navController.currentBackStackEntryAsState()
+                val bottomNaviItems = listOf(
+                    Screen.BottomNavItem.Home.route,
+                    Screen.BottomNavItem.Search.route,
+                    Screen.BottomNavItem.Setting.route
+                )
 
-private fun NavGraphBuilder.addLoginPage(navController: NavController, context: Context) {
-    composable(route = Screen.Login.route) { backStackEntry ->
-        val userId = backStackEntry.savedStateHandle.get<String>(ID)
-        val userPwd = backStackEntry.savedStateHandle.get<String>(PASSWORD)
-        val userNickname = backStackEntry.savedStateHandle.get<String>(NICKNAME)
-        LoginPage(
-            onClickLogin = { id, password ->
-                if (userId != id) Toast.makeText(context, "아이디가 잘못되었습니다.", Toast.LENGTH_SHORT).show()
-                else if (userPwd != password) Toast.makeText(context, "비밀번호가 잘못되었습니다.", Toast.LENGTH_SHORT).show()
-                else navController.navigate(route = Screen.Home.route + "/${userId}/${userPwd}/${userNickname}") {
-                        popUpTo(navController.graph.id) {
-                            inclusive = true
+                Scaffold(
+                    bottomBar = {
+                        if (currentRoute?.destination?.route in bottomNaviItems) {
+                            BottomNavigationBar(navController = navController)
                         }
                     }
-            },
-            onClickSignUpPage = {
-                navController.navigate(route = Screen.SignUp.route)
-            }
-        )
-    }
-}
+                ) { paddingValues ->
+                    NavHost(
+                        navController = navController,
+                        startDestination = Screen.Login.route,
+                        modifier = Modifier.padding(paddingValues)
+                    ) {
+                        composable(route = Screen.Login.route) { entry ->
+                            val loginViewModel: LoginViewModel = viewModel()
+                            val loginState by loginViewModel.collectAsState()
 
-private fun NavGraphBuilder.addSignUpPage(navController: NavController) {
-    composable(route = Screen.SignUp.route) {
-        val signUpStateFlow = MutableStateFlow<SignUpState>(SignUpState.Loading)
-        val signUpState by signUpStateFlow.collectAsState()
+                            entry.savedStateHandle.apply {
+                                loginViewModel.updateLoginSavedStateHandle(
+                                    id = get<String>(ID) ?: "",
+                                    password = get<String>(PASSWORD) ?: "",
+                                    nickname = get<String>(NICKNAME) ?: ""
+                                )
+                            }
 
-        SignUpPage(
-            onStateChange = {
-                signUpStateFlow.value = it
-            })
+                            loginViewModel.collectSideEffect {
+                                when (it) {
+                                    is LoginSideEffect.MoveToHomePage -> {
+                                        navController.navigate(route = Screen.BottomNavItem.Home.route) {
+                                            popUpTo(navController.graph.id) {
+                                                inclusive = true
+                                            }
+                                        }
+                                        navController.currentBackStackEntry?.savedStateHandle?.apply {
+                                            set(ID, loginViewModel.id)
+                                            set(PASSWORD, loginViewModel.password)
+                                            set(NICKNAME, loginViewModel.nickname)
+                                        }
+                                    }
 
-        when (signUpState) {
-            SignUpState.Loading -> Unit
+                                    is LoginSideEffect.MoveToSignUpPage -> {
+                                        navController.navigate(route = Screen.SignUp.route)
+                                    }
+                                }
+                            }
 
-            SignUpState.ErrorId -> {
-                Toast.makeText(LocalContext.current, "아이디가 잘못되었습니다.", Toast.LENGTH_SHORT).show()
-            }
+                            LoginPage(
+                                state = loginState,
+                                context = context,
+                                onClickLogin = { id, password ->
+                                    loginViewModel.login(id, password)
+                                },
+                                onClickSignUpPage = {
+                                    loginViewModel.signUp()
+                                }
+                            )
+                        }
+                        composable(route = Screen.SignUp.route) {
+                            val signUpViewModel: SignUpViewModel = viewModel()
+                            val signUpState by signUpViewModel.collectAsState()
 
-            SignUpState.ErrorPassword -> {
-                Toast.makeText(LocalContext.current, "비밀번호가 잘못되었습니다.", Toast.LENGTH_SHORT).show()
-            }
+                            signUpViewModel.collectSideEffect {
+                                when (it) {
+                                    is SignUpSideEffect.BackToLoginPage -> {
+                                        navController.previousBackStackEntry?.savedStateHandle?.apply {
+                                            set(ID, it.id)
+                                            set(PASSWORD, it.password)
+                                            set(NICKNAME, it.nickname)
+                                        }
+                                        navController.popBackStack()
+                                    }
+                                }
+                            }
 
-            SignUpState.ErrorNickname -> {
-                Toast.makeText(LocalContext.current, "닉네임이 잘못되었습니다.", Toast.LENGTH_SHORT).show()
-            }
+                            SignUpPage(
+                                state = signUpState,
+                                context = context,
+                                onClickSignUp = { id, password, nickname ->
+                                    signUpViewModel.register(id, password, nickname)
+                                }
+                            )
+                        }
+                        composable(
+                            route = Screen.BottomNavItem.Home.route
+                        ) {
+                            val homeViewModel: HomeViewModel = composableActivityViewModel()
+                            val homeState by homeViewModel.collectAsState()
 
-            is SignUpState.Success -> {
-                navController.previousBackStackEntry?.savedStateHandle?.apply {
-                    val data = signUpState as SignUpState.Success
-                    set(ID, data.id)
-                    set(PASSWORD, data.password)
-                    set(NICKNAME, data.nickname)
+                            it.savedStateHandle.apply {
+                                if (get<String>(ID)?.isNotEmpty() == true) {
+                                    homeViewModel.updateHomeData(
+                                        id = get<String>(ID) ?: "",
+                                        password = get<String>(PASSWORD) ?: "",
+                                        nickname = get<String>(NICKNAME) ?: ""
+                                    )
+                                }
+                            }
+
+                            homeViewModel.collectSideEffect {
+                                when (it) { }
+                            }
+
+                            HomePage(
+                                context = context,
+                                id = homeViewModel.id,
+                                password = homeViewModel.password,
+                                nickname = homeViewModel.nickname,
+                                modifier = Modifier
+                                    .padding(16.dp)
+                                    .fillMaxSize()
+                            )
+                        }
+                        composable(Screen.BottomNavItem.Search.route) {
+                            val homeViewModel: HomeViewModel = composableActivityViewModel()
+                            SearchPage()
+                        }
+                        composable(Screen.BottomNavItem.Setting.route) {
+                            SettingPage()
+                        }
+                    }
+
                 }
-                navController.popBackStack()
             }
         }
     }
 }
 
-private fun NavGraphBuilder.addHomePage(navController: NavController) {
-    composable(
-        route = Screen.Home.route + "/{arg1}/{arg2}/{arg3}",
-        arguments = listOf(
-            navArgument("arg1") { type = NavType.StringType },
-            navArgument("arg2") { type = NavType.StringType },
-            navArgument("arg3") { type = NavType.StringType }
-        )
-    ) { entry ->
-        val id = entry.arguments?.getString("arg1")
-        val password = entry.arguments?.getString("arg2")
-        val nickname = entry.arguments?.getString("arg3")
-        HomePage(
-            id = id ?: "",
-            password = password ?: "",
-            nickname = nickname ?: "",
-            modifier = Modifier.padding(16.dp).fillMaxSize()
-        )
-    }
-}
+@Composable
+fun getActivity() = LocalContext.current as ComponentActivity
 
+@Composable
+inline fun <reified VM : ViewModel> composableActivityViewModel(
+    key: String? = null,
+    factory: ViewModelProvider.Factory? = null,
+): VM = viewModel(
+    VM::class.java,
+    getActivity(), key, factory
+)

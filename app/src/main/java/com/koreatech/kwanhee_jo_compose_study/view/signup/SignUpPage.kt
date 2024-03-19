@@ -1,5 +1,6 @@
 package com.koreatech.kwanhee_jo_compose_study.view.signup
 
+import android.content.Context
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -26,15 +27,18 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.koreatech.kwanhee_jo_compose_study.R
+import com.koreatech.kwanhee_jo_compose_study.common.UiStatus
 import com.koreatech.kwanhee_jo_compose_study.components.ButtonWithCornerShape
 import com.koreatech.kwanhee_jo_compose_study.components.Title
 import com.koreatech.kwanhee_jo_compose_study.fusions.EditTextWithTitle
+import com.koreatech.kwanhee_jo_compose_study.utils.toast
 
 @Composable
 fun SignUpPage(
-    onStateChange: (SignUpState) -> Unit,
     modifier: Modifier = Modifier,
-//    onClickSignUp: (id: String, password: String, nickname: String) -> Unit,
+    state: SignUpState,
+    context: Context,
+    onClickSignUp: (id: String, password: String, nickname: String) -> Unit,
 ) {
     var id by rememberSaveable {
         mutableStateOf("")
@@ -105,15 +109,17 @@ fun SignUpPage(
             modifier = Modifier
                 .padding(horizontal = 20.dp)
                 .fillMaxWidth(),
-            onClick = {
-                when {
-                    !(id.length in 6..10) -> onStateChange(SignUpState.ErrorId)
-                    !(password.length in 8..10) -> onStateChange(SignUpState.ErrorPassword)
-                    (nickname.isEmpty()) -> onStateChange(SignUpState.ErrorNickname)
-                    else -> onStateChange(SignUpState.Success(id, password, nickname))
-                }
-            }
+            onClick = { onClickSignUp(id, password, nickname) }
         )
+    }
+    when (state.status) {
+        UiStatus.Loading -> Unit
+        UiStatus.Success -> Unit
+        is UiStatus.Failed ->{
+            toast(context, state.status.message)
+        }
+
+        else -> {}
     }
 }
 

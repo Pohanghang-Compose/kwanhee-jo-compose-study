@@ -1,21 +1,23 @@
 package com.koreatech.kwanhee_jo_compose_study.view.home
 
+import android.content.Context
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.FontStyle
-import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import com.koreatech.kwanhee_jo_compose_study.ui.theme.Cyan500
+import com.koreatech.kwanhee_jo_compose_study.fusions.HomeMainProfile
+import com.koreatech.kwanhee_jo_compose_study.fusions.HomePersonProfile
+import com.koreatech.kwanhee_jo_compose_study.sample.homeProfileSampleData
 
 @Composable
 fun HomePage(
+    context: Context,
     id: String,
     password: String,
     nickname: String,
@@ -23,42 +25,32 @@ fun HomePage(
 ) {
     Column(
         modifier = modifier
+            .fillMaxSize()
+            .padding(horizontal = 8.dp)
     ) {
-        Spacer(modifier = Modifier.fillMaxHeight(0.2f))
-        Text(
-            text = "ID : $id",
-            fontStyle = FontStyle.Italic,
-            fontWeight = FontWeight.Bold,
-            fontSize = 18.sp,
-            color = Cyan500
-        )
-
-        Spacer(modifier = Modifier.height(10.dp))
-
-        Text(
-            text = "Password : $password",
-            fontStyle = FontStyle.Italic,
-            fontWeight = FontWeight.Bold,
-            fontSize = 18.sp,
-            color = Cyan500
-        )
-
-        Spacer(modifier = Modifier.height(10.dp))
-
-        Text(
-            text = "nickname : $nickname",
-            fontStyle = FontStyle.Italic,
-            fontWeight = FontWeight.Bold,
-            fontSize = 18.sp,
-            color = Cyan500
-        )
-
-        Spacer(modifier = Modifier.height(10.dp))
+        Text(text = "id : $id")
+        Text(text = "password : $password")
+        Text(text = "nickname : $nickname")
+        LazyColumn() {
+            items(homeProfileSampleData.size) { index ->
+                if (index == 0) {
+                    HomeMainProfile(
+                        context = context,
+                        homeProfileData = homeProfileSampleData[index]
+                    )
+                } else {
+                    HomePersonProfile(
+                        context = context,
+                        homeProfileData = homeProfileSampleData[index]
+                    )
+                }
+            }
+        }
     }
 }
 
 @Preview
 @Composable
 fun HomePagePreview() {
-    HomePage("id", "password", "nickname")
+    HomePage(context = LocalContext.current, "1", "2", "3")
 }

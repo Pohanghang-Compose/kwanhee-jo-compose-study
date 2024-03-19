@@ -68,7 +68,6 @@ dependencies {
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
 
-
     // orbit
     implementation("org.orbit-mvi:orbit-core:6.1.1")
     implementation("org.orbit-mvi:orbit-viewmodel:6.1.1")
@@ -80,4 +79,7 @@ dependencies {
 
     // Navigation Compose
     implementation ("androidx.navigation:navigation-compose:2.4.2")
+
+    // coil
+    implementation("io.coil-kt:coil-compose:2.6.0")
 }
