@@ -23,5 +23,9 @@ gradlePlugin {
             id = "pohahang.plugin.application.compose"
             implementationClass = "AndroidApplicationComposeConventionPlugin"
         }
+        register("AndroidFeatureConventionPlugin") {
+            id = "pohahang.plugin.feature"
+            implementationClass = "AndroidFeatureConventionPlugin"
+        }
     }
 }

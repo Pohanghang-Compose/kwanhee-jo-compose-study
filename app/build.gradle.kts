@@ -2,6 +2,7 @@
 plugins {
     id("pohahang.plugin.application")
     id("pohahang.plugin.application.compose")
+    id("pohahang.plugin.feature")
 }
 
 android {
@@ -26,15 +27,6 @@ android {
 }
 
 dependencies {
-    implementation(libs.androidx.core.ktx)
-    implementation(libs.androidx.lifecycle.runtime.ktx)
-    implementation(libs.androidx.activity.compose)
-    implementation(libs.androidx.lifecycle.viewmodel.compose)
-    implementation(libs.androidx.navigation.compose)
-
-    implementation(libs.bundles.orbit)
-    implementation(libs.coil.compose)
-
     testImplementation(libs.junit4)
     testImplementation(libs.orbit.test)
     androidTestImplementation(libs.androidx.test.ext)
