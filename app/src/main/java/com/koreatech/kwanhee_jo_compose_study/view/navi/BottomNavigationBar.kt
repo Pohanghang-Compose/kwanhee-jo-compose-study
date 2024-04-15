@@ -7,7 +7,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.painterResource
 import androidx.navigation.NavHostController
-import com.koreatech.kwanhee_jo_compose_study.Screen
+import com.koreatech.kwanhee_jo_compose_study.ui.Screen
 import com.koreatech.kwanhee_jo_compose_study.view.currentRoute
 
 @Composable

@@ -1,4 +1,5 @@
 pluginManagement {
+    includeBuild("build-logic")
     repositories {
         google()
         mavenCentral()
@@ -15,3 +16,6 @@ dependencyResolutionManagement {
 
 rootProject.name = "kwanhee-jo-compose-study"
 include(":app")
+include(":core")
+include(":core:network")
+include(":core:data")

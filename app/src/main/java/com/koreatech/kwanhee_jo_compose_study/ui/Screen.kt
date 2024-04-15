@@ -1,8 +1,9 @@
-package com.koreatech.kwanhee_jo_compose_study
+package com.koreatech.kwanhee_jo_compose_study.ui
 
 import androidx.navigation.NamedNavArgument
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
+import com.koreatech.kwanhee_jo_compose_study.R
 
 sealed class Screen(
     val route: String,

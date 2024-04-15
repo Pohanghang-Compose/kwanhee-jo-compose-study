@@ -1,16 +1,16 @@
 package com.koreatech.kwanhee_jo_compose_study.composable
 
-import android.util.Log
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import com.koreatech.kwanhee_jo_compose_study.Constants
-import com.koreatech.kwanhee_jo_compose_study.Screen
+import com.koreatech.kwanhee_jo_compose_study.data.LoginData
+import com.koreatech.kwanhee_jo_compose_study.ui.Screen
 import com.koreatech.kwanhee_jo_compose_study.utils.clearStackNavigate
-import com.koreatech.kwanhee_jo_compose_study.utils.setArgumentCurrentStack
 import com.koreatech.kwanhee_jo_compose_study.utils.showToast
 import com.koreatech.kwanhee_jo_compose_study.view.login.LoginPage
 import com.koreatech.kwanhee_jo_compose_study.view.login.LoginSideEffect
@@ -27,18 +27,15 @@ fun NavGraphBuilder.accountComposable(navController: NavHostController) {
     ) {
         val focusManager = LocalFocusManager.current
         val context = LocalContext.current
-        val loginViewModel: LoginViewModel = viewModel()
+        val loginViewModel: LoginViewModel = hiltViewModel()
         // val loginState by loginViewModel.collectAsState()
 
         loginViewModel.collectSideEffect {
             when (it) {
                 is LoginSideEffect.MoveToHomePage -> {
                     navController.clearStackNavigate(Screen.BottomNavItem.Home.route)
-                    navController.setArgumentCurrentStack(
-                        mapOf(Constants.ID to it.id),
-                        mapOf(Constants.PASSWORD to it.password),
-                        mapOf(Constants.NICKNAME to it.nickname),
-                    )
+                    val loginData = LoginData(it.id, it.password, it.nickname)
+                    navController.currentBackStackEntry?.savedStateHandle?.set("loginData", loginData)
                 }
 
                 is LoginSideEffect.MoveToSignUpPage -> navController.navigate(route = Screen.Signup.route)
@@ -68,7 +65,6 @@ fun NavGraphBuilder.accountComposable(navController: NavHostController) {
         val context = LocalContext.current
         val focusManager = LocalFocusManager.current
         val signupViewModel: SignupViewModel = viewModel()
-        // val signupState by signupViewModel.collectAsState()
 
         signupViewModel.collectSideEffect {
             when (it) {
