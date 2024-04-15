@@ -3,12 +3,14 @@ androidGradlePlugin = "8.1.4"
 androidxCore = "1.9.0"
 androidxLifecycle = "2.7.0"
 androidxActivity = "1.8.2"
-androidxNavigation = "2.4.2"
-
+androidxNavigation = "2.5.3"
 androidxComposeBom = "2023.03.00"
 
 androidxTestExt = "1.1.5"
 androidxEspresso = "3.5.1"
+
+kotlinxSerializationJson = "1.6.3"
+kotlinxCoroutinesCoreVersion = "1.6.3"
 
 kotlinVersion = "1.8.10"
 composeCompilerVersion = "1.4.3"
@@ -16,13 +18,27 @@ composeCompilerVersion = "1.4.3"
 orbitVersion = "6.1.1"
 coilCompose = "2.6.0"
 
+hiltVersion = "2.44"
+hiltNavigationCompose = "1.0.0"
+okhttp = "4.12.0"
+retrofit = "2.9.0"
+retrofitKotlinxSerializationJson = "1.0.0"
+gson = "2.9.0"
 
 junit4 = "4.13.2"
 org-jetbrains-kotlin-jvm = "1.8.10"
+org-jetbrains-kotlin-jvm1810 = "1.8.10"
+org-jetbrains-kotlin-serialization = "1.8.0"
+espresso-core = "3.5.1"
+appcompat = "1.6.1"
+material = "1.11.0"
+
+javaxInjectVersion = "1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "androidxCore" }
 androidx-lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "androidxLifecycle" }
+androidx-lifecycle-runtime-compose = { group = "androidx.lifecycle", name = "lifecycle-runtime-compose", version.ref = "androidxLifecycle"}
 androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "androidxActivity" }
 androidx-lifecycle-viewmodel-compose = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-compose", version.ref = "androidxLifecycle" }
 androidx-navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "androidxNavigation" }
@@ -37,6 +53,9 @@ androidx-compose-material3 = { module = "androidx.compose.material3:material3" }
 androidx-compose-ui-test = { module = "androidx.compose.ui:ui-test-junit4" }
 androidx-compose-ui-test-manifest = { module = "androidx.compose.ui:ui-test-manifest" }
 
+kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinxSerializationJson" }
+kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinxCoroutinesCoreVersion" }
+
 junit4 = { group = "junit", name = "junit", version.ref = "junit4" }
 
 orbit-core = { group = "org.orbit-mvi", name = "orbit-core", version.ref = "orbitVersion" }
@@ -46,14 +65,39 @@ orbit-test = { group = "org.orbit-mvi", name = "orbit-test", version.ref = "orbi
 
 coil-compose = { group = "io.coil-kt", name = "coil-compose", version.ref = "coilCompose" }
 
+hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref = "hiltVersion" }
+hilt-compiler = { group = "com.google.dagger", name = "hilt-compiler", version.ref = "hiltVersion" }
+hilt-navigation-compose = { group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "hiltNavigationCompose" }
+
+okhttp-logging = { group = "com.squareup.okhttp3", name = "logging-interceptor", version.ref = "okhttp" }
+retrofit-core = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }
+retrofit-kotlin-serialization = { group = "com.jakewharton.retrofit", name = "retrofit2-kotlinx-serialization-converter", version.ref = "retrofitKotlinxSerializationJson" }
+gson = {group = "com.squareup.retrofit2", name = "converter-gson", version.ref = "gson"}
+
+javax-inject = { module = "javax.inject:javax.inject", version.ref = "javaxInjectVersion" }
+
 # Dependencies build-logic
 android-gradlePlugin = { group = "com.android.tools.build", name = "gradle", version.ref = "androidGradlePlugin" }
 kotlin-gradlePlugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlinVersion" }
+espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espresso-core" }
+appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
+material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "androidGradlePlugin" }
 kotlin-anroid = { id = "org.jetbrains.kotlin.android", version.ref = "kotlinVersion" }
+hilt = { id = "com.google.dagger.hilt.android", version.ref = "hiltVersion" }
+org-jetbrains-kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "org-jetbrains-kotlin-jvm1810" }
+com-android-library = { id = "com.android.library", version.ref = "androidGradlePlugin" }
+org-jetbrains-kotlin-serialization = { id ="org.jetbrains.kotlin.plugin.serialization", version.ref = "org-jetbrains-kotlin-serialization"}
+
+#Plugins defined
+pohahang-android-application = { id = "pohahang.android.application", version = "unspecified" }
+pohahang-android-application-compose = { id = "pohahang.android.application.compose", version = "unspecified" }
+pohahang-android-feature = { id = "pohahang.android.plugin.feature", version = "unspecified" }
+pohahang-android-hilt = { id = "pohahang.android.plugin.hilt", version = "unspecified" }
+pohahang-android-library = { id = "pohahang.android.library", version = "unspecified" }
 
 [bundles]
 orbit = ["orbit-core", "orbit-viewmodel", "orbit-compose"]

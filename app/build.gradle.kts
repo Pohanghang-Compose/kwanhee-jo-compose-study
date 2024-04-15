@@ -1,8 +1,9 @@
-
+@Suppress("DSL_SCOPE_VIOLATION") // TODO: Remove once KTIJ-19369 is fixed
 plugins {
-    id("pohahang.plugin.application")
-    id("pohahang.plugin.application.compose")
-    id("pohahang.plugin.feature")
+    alias(libs.plugins.pohahang.android.application)
+    alias(libs.plugins.pohahang.android.application.compose)
+    alias(libs.plugins.pohahang.android.feature)
+    alias(libs.plugins.pohahang.android.hilt)
 }
 
 android {
@@ -13,6 +14,7 @@ android {
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
+
     }
 
     buildTypes {
@@ -27,6 +29,12 @@ android {
 }
 
 dependencies {
+    implementation(project(mapOf("path" to ":core:network")))
+    implementation(project(mapOf("path" to ":core:data")))
+
+    implementation(libs.androidx.lifecycle.runtime.compose)
+    implementation(libs.hilt.navigation.compose)
+    implementation(libs.androidx.navigation.compose)
     testImplementation(libs.junit4)
     testImplementation(libs.orbit.test)
     androidTestImplementation(libs.androidx.test.ext)

@@ -1,4 +1,4 @@
-package com.koreatech.kwanhee_jo_compose_study
+package com.koreatech.kwanhee_jo_compose_study.ui
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.compose.rememberNavController

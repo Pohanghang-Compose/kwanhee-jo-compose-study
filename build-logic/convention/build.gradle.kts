@@ -16,16 +16,24 @@ dependencies {
 gradlePlugin {
     plugins {
         register("AndroidApplicationConventionPlugin") {
-            id = "pohahang.plugin.application"
+            id = "pohahang.android.application"
             implementationClass = "AndroidApplicationConventionPlugin"
         }
         register("AndroidApplicationComposeConventionPlugin") {
-            id = "pohahang.plugin.application.compose"
+            id = "pohahang.android.application.compose"
             implementationClass = "AndroidApplicationComposeConventionPlugin"
         }
         register("AndroidFeatureConventionPlugin") {
-            id = "pohahang.plugin.feature"
+            id = "pohahang.android.plugin.feature"
             implementationClass = "AndroidFeatureConventionPlugin"
+        }
+        register("AndroidHiltConventionPlugin") {
+            id = "pohahang.android.plugin.hilt"
+            implementationClass = "AndroidHiltConventionPlugin"
+        }
+        register("AndroidLibraryConventionPlugin") {
+            id = "pohahang.android.library"
+            implementationClass = "AndroidLibraryConventionPlugin"
         }
     }
 }

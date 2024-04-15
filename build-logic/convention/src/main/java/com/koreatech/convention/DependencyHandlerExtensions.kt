@@ -2,6 +2,9 @@ package com.koreatech.convention
 
 import org.gradle.api.artifacts.dsl.DependencyHandler
 
+fun DependencyHandler.kapt(dependency: Any) {
+    add("kapt", dependency)
+}
 fun DependencyHandler.implementation(dependency: Any) {
     add("implementation", dependency)
 }

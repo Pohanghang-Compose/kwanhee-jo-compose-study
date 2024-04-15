@@ -13,7 +13,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.currentBackStackEntryAsState
-import com.koreatech.kwanhee_jo_compose_study.Screen
+import com.koreatech.kwanhee_jo_compose_study.ui.Screen
 import com.koreatech.kwanhee_jo_compose_study.composable.accountComposable
 import com.koreatech.kwanhee_jo_compose_study.composable.homeComposable
 import com.koreatech.kwanhee_jo_compose_study.view.navi.BottomNavigationBar
